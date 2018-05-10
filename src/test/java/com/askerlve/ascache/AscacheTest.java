@@ -2,6 +2,7 @@ package com.askerlve.ascache;
 
 import com.askerlve.ascache.bean.User;
 import com.askerlve.ascache.store.impl.BasicDataStore;
+import com.askerlve.ascache.store.impl.LRUDataStore;
 import com.askerlve.ascache.store.impl.WeakValueDataStore;
 import org.junit.Test;
 
@@ -33,6 +34,37 @@ public class AscacheTest {
         System.gc();
         Thread.sleep(1000);
         System.out.println("Hello " + cache.get(key));
+    }
+
+    @Test
+    public void TestLRU() {
+        Ascache<String, User> cache = new Ascache<String, User>(new LRUDataStore<>(2));
+        String key = "leo";
+        User user = new User();
+        user.setName("leo");
+
+        String key1 = "liu";
+        User user1 = new User();
+        user1.setName("liu");
+
+        String key2 = "robin";
+        User user2 = new User();
+        user2.setName("robin");
+
+        cache.put(key, user);
+        cache.put(key1, user1);
+        cache.get(key);
+        cache.put(key2, user2);
+
+        if (cache.get(key) != null) {
+            System.out.println("Hello " + cache.get(key).getName());
+        }
+        if (cache.get(key1) != null) {
+            System.out.println("Hello " + cache.get(key1).getName());
+        }
+        if (cache.get(key2) != null) {
+            System.out.println("Hello " + cache.get(key2).getName());
+        }
     }
 
 }
